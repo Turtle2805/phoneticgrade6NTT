@@ -1,0 +1,806 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bài Tập Phát Âm - Ms Lê Hằng English</title>
+    <!-- Nhúng font chữ Bubble/Bo tròn thân thiện từ Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Nunito:wght@600;800&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+        
+        /* Cấu hình chung và nền tối ưu họa tiết lớp học xanh ẩn hiện */
+        body {
+            margin: 0;
+            padding: 0;
+            background-color: #00B4A2;
+            background-image: 
+                url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='100' height='100' viewBox='0 0 100 100'><circle cx='50' cy='50' r='20' fill='%23ffffff' fill-opacity='0.04'/><path d='M50 25v50M25 50h50' stroke='%23ffffff' stroke-width='1.5' stroke-opacity='0.03'/></svg>"),
+                url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='120' height='120' viewBox='0 0 120 120'><path d='M30 80c15-25 35-25 50 0M45 45c8-12 18-12 25 0' stroke='%23ffffff' stroke-width='2' fill='none' stroke-opacity='0.08'/><circle cx='90' cy='35' r='5' fill='%23ffffff' fill-opacity='0.05'/></svg>"),
+                url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='140' height='140' viewBox='0 0 140 140'><path d='M20 30h25v25H20z' fill='%23ffffff' fill-opacity='0.03'/><path d='M80 90l20 20-20 20-20-20z' fill='%23ffffff' fill-opacity='0.04'/></svg>");
+            color: #4a5568; /* Giảm độ đậm màu chữ 25% (Từ #2c3e50 sang màu xám dịu) */
+            min-height: 100vh;
+            padding: 25px 12px;
+            font-family: 'Nunito', 'Segoe UI', sans-serif;
+        }
+
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        /* FONT STYLE: POSTER (Cho tiêu đề và thông báo chính) */
+        .poster-font {
+            font-family: 'Impact', 'Arial Black', sans-serif;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+        }
+
+        /* FONT STYLE: BUBBLE (Cho câu hỏi, đáp án, giải thích) */
+        .bubble-font {
+            font-family: 'Fredoka One', 'Nunito', sans-serif;
+        }
+
+        header {
+            text-align: center;
+            color: rgba(255, 255, 255, 0.85); /* Giảm độ đậm màu chữ trắng tiêu đề chính */
+            margin-bottom: 15px;
+        }
+        header h5 {
+            margin: 0;
+            font-size: 16px;
+            font-weight: normal;
+            text-shadow: 2px 2px 0px rgba(0,0,0,0.1);
+        }
+
+        .notice-box {
+            background-color: #fff3cd;
+            border: 3px dashed #ffc107;
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 35px;
+            box-shadow: 0 8px 24px rgba(0,0,0,0.12);
+            text-align: center;
+        }
+        .notice-title {
+            color: #dc3545;
+            margin-bottom: 10px;
+            font-size: 18px;
+            text-shadow: 1px 1px 0px rgba(0,0,0,0.05);
+        }
+        .notice-content {
+            font-size: 15px;
+            line-height: 1.6;
+            color: #7d651a; /* Giảm độ đậm màu 25% */
+            font-weight: bold;
+        }
+        .notice-footer {
+            margin-top: 12px;
+            font-size: 16px;
+            color: #2b9360; /* Giảm độ đậm màu 25% */
+        }
+
+        /* Khung kính mờ Glassmorphism cho thẻ câu hỏi */
+        .question-card {
+            background: rgba(255, 255, 255, 0.94);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            border-radius: 24px;
+            padding: 25px;
+            margin-bottom: 35px;
+            box-shadow: 0 12px 35px rgba(0,0,0,0.16);
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+        }
+
+        .question-header {
+            background-color: #004d40;
+            color: rgba(255, 255, 255, 0.85); /* Giảm độ đậm chữ */
+            padding: 16px 22px;
+            border-radius: 16px;
+            margin-bottom: 22px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .question-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: rgba(255, 235, 59, 0.85); /* Giảm độ đậm màu vàng tiêu đề câu hỏi */
+        }
+        .question-words {
+            font-size: 19px;
+            letter-spacing: 1px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+        
+        /* Tối ưu hiển thị ký tự gạch chân đẹp và không dính sát chữ */
+        .question-words u, .option-btn u {
+            text-decoration: underline;
+            text-underline-offset: 5px; 
+            text-decoration-thickness: 2px;
+            font-weight: bold;
+            padding: 0 1px;
+        }
+        .question-words u {
+            color: rgba(255, 235, 59, 0.9);
+        }
+        .divider-mark {
+            color: rgba(255, 255, 255, 0.35); /* Làm mờ dấu phân cách | tránh rối mắt */
+            font-weight: normal;
+            margin: 0 4px;
+        }
+
+        /* Hệ thống nút chọn lưới 2x2 kiểu khối 3D Bubble */
+        .options-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+        @media (max-width: 520px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        .option-btn {
+            background-color: #e0f2f1;
+            color: #4a5568; /* Giảm độ đậm màu chữ đáp án 25% */
+            border: none;
+            padding: 16px 22px;
+            font-size: 17px;
+            border-radius: 14px;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.1s ease;
+            box-shadow: 0 6px 0 #b2dfdb;
+            position: relative;
+            outline: none;
+        }
+        .option-btn u {
+            color: #dc3545; /* Đổi sang màu đỏ vừa phải mềm mại hơn */
+        }
+        .option-btn:active:not(:disabled) {
+            transform: translateY(4px);
+            box-shadow: 0 2px 0 #b2dfdb;
+        }
+        .option-btn:disabled {
+            cursor: default;
+        }
+        
+        /* Trạng thái Chọn ĐÚNG */
+        .option-btn.correct {
+            background-color: #00D26A !important;
+            color: #fff !important;
+            box-shadow: 0 6px 0 #009a4e !important;
+        }
+        .option-btn.correct u {
+            color: #fff !important;
+        }
+        
+        /* Trạng thái Chọn SAI */
+        .option-btn.incorrect {
+            background-color: #FF4757 !important;
+            color: #fff !important;
+            box-shadow: 0 6px 0 #d32f2f !important;
+        }
+        .option-btn.incorrect u {
+            color: #fff !important;
+        }
+
+        /* Khung giải thích chi tiết tinh tế */
+        .explanation-box {
+            background-color: #fff;
+            border-radius: 16px;
+            border-left: 8px solid #ffaa33;
+            padding: 22px;
+            box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+            display: none;
+            margin-top: 20px;
+        }
+        .exp-banner {
+            background-color: #fffde7;
+            border: 2px dashed #ff9100;
+            border-radius: 10px;
+            padding: 12px 16px;
+            font-size: 15px;
+            font-weight: bold;
+            color: #e65100;
+            margin-bottom: 16px;
+        }
+        .exp-content {
+            font-size: 15px;
+            line-height: 1.7;
+            color: #5a6578; /* Giảm độ đậm chữ giải thích */
+        }
+        .exp-content ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .exp-content li {
+            margin-bottom: 8px;
+        }
+        .eng-word {
+            color: #0288d1;
+            font-weight: bold;
+        }
+        .ipa-box {
+            background-color: #f3e5f5;
+            color: #7b1fa2;
+            padding: 2px 8px;
+            border-radius: 6px;
+            font-family: 'Lucida Sans Unicode', sans-serif;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .vi-mean {
+            color: #e64a19;
+            font-weight: bold;
+        }
+        .why-title {
+            font-weight: bold;
+            margin-top: 16px;
+            color: #333; /* Giảm độ đậm chữ tiêu đề kết luận */
+            font-size: 16px;
+        }
+
+        .submit-container {
+            text-align: center;
+            margin: 45px 0;
+        }
+        .submit-btn {
+            background-color: #ff9100;
+            color: #fff;
+            border: none;
+            padding: 18px 50px;
+            font-size: 18px;
+            border-radius: 40px;
+            cursor: pointer;
+            box-shadow: 0 6px 0 #e65100;
+            transition: all 0.1s ease;
+        }
+        .submit-btn:active {
+            transform: translateY(3px);
+            box-shadow: 0 3px 0 #e65100;
+        }
+
+        /* Popup thông báo kết quả cuối bài */
+        .popup-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.6);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+        .popup-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .popup-card {
+            background: white;
+            border-radius: 28px;
+            padding: 35px;
+            text-align: center;
+            max-width: 440px;
+            width: 90%;
+            box-shadow: 0 20px 45px rgba(0,0,0,0.3);
+            transform: scale(0.8);
+            transition: all 0.3s ease;
+        }
+        .popup-overlay.active .popup-card {
+            transform: scale(1);
+        }
+        .popup-title {
+            font-size: 26px;
+            color: #004d40;
+            margin-bottom: 15px;
+        }
+        .popup-score {
+            font-size: 50px;
+            color: #ff9100;
+            margin-bottom: 18px;
+        }
+        .popup-text {
+            font-size: 16px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 25px;
+        }
+        .popup-close {
+            background-color: #00B4A2;
+            color: white;
+            border: none;
+            padding: 14px 35px;
+            font-size: 16px;
+            border-radius: 30px;
+            cursor: pointer;
+            box-shadow: 0 4px 0 #00897b;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <header>
+        <h5 class="poster-font">Giáo viên tạo: Ms Lê Hằng English</h5>
+    </header>
+
+    <div class="notice-box">
+        <div class="notice-title poster-font">⚠️ LỜI NHẮC CỰC KỲ QUAN TRỌNG ⚠️</div>
+        <div class="notice-content bubble-font">
+            Chỉ có đọc kỹ giải thích ngay sau mỗi câu, sau đó ghi lại từ vựng/cấu trúc mới vào vở để học thì mới thực sự giỏi lên.<br>
+            Làm cho xong mà không đọc giải thích hay đọc qua loa không ghi chép thì chỉ tốn thời gian vô ích!
+        </div>
+        <div class="notice-footer poster-font">* Kéo tới đâu, làm tới đó! *</div>
+    </div>
+
+    <!-- Vùng tự động sinh và hiển thị danh sách câu hỏi -->
+    <div id="quiz-container"></div>
+
+    <div class="submit-container">
+        <button class="submit-btn poster-font" onclick="showSummary()">Tổng kết kết quả</button>
+    </div>
+</div>
+
+<div class="popup-overlay" id="popup">
+    <div class="popup-card bubble-font">
+        <div class="popup-title poster-font">🎉 Kết Quả Bài Kiểm Tra</div>
+        <div class="popup-score poster-font" id="popup-score-text">0/13</div>
+        <div class="popup-text" id="popup-comment">Hãy rèn luyện thói quen ghi chép từ vựng hàng ngày nhé!</div>
+        <button class="popup-close poster-font" onclick="closePopup()">Đóng</button>
+    </div>
+</div>
+
+<script>
+    // Toàn bộ cơ sở dữ liệu bài tập phát âm với giải thích chi tiết toàn bộ các đáp án
+    const quizQuestions = [
+        {
+            id: "q1",
+            title: "🌟 CÂU 1:",
+            headerWords: "f<u>a</u>ther <span class='divider-mark'>|</span> f<u>a</u>st <span class='divider-mark'>|</span> b<u>a</u>d <span class='divider-mark'>|</span> cl<u>a</u>ss",
+            correctAnswer: "bad",
+            banner: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+            analysis: [
+                { word: "father", pos: "(n)", ipa: "/ɑː/", mean: "cha, bố" },
+                { word: "fast", pos: "(adj)", ipa: "/ɑː/", mean: "nhanh" },
+                { word: "bad", pos: "(adj)", ipa: "/æ/", mean: "tồi tệ, xấu" },
+                { word: "class", pos: "(n)", ipa: "/ɑː/", mean: "lớp học" }
+            ],
+            why: "Phần gạch chân ở bad phát âm là <span class='ipa-box'>/æ/</span>, trong khi các từ còn lại phát âm là <span class='ipa-box'>/ɑː/</span>.",
+            options: [
+                { text: "father", html: "f<u>a</u>ther" },
+                { text: "fast", html: "f<u>a</u>st" },
+                { text: "bad", html: "b<u>a</u>d" },
+                { text: "class", html: "cl<u>a</u>ss" }
+            ]
+        },
+        {
+            id: "q2",
+            title: "🌟 CÂU 2:",
+            headerWords: "f<u>u</u>n <span class='divider-mark'>|</span> s<u>u</u>bject <span class='divider-mark'>|</span> c<u>u</u>p <span class='divider-mark'>|</span> comp<u>u</u>ter",
+            correctAnswer: "computer",
+            banner: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+            analysis: [
+                { word: "fun", pos: "(n/adj)", ipa: "/ʌ/", mean: "niềm vui, vui vẻ" },
+                { word: "subject", pos: "(n)", ipa: "/ʌ/", mean: "môn học, chủ đề" },
+                { word: "cup", pos: "(n)", ipa: "/ʌ/", mean: "cái tách, cái cúp" },
+                { word: "computer", pos: "(n)", ipa: "/juː/", mean: "máy vi tính" }
+            ],
+            why: "Phần gạch chân ở computer phát âm là <span class='ipa-box'>/juː/</span>, trong khi các từ còn lại phát âm là <span class='ipa-box'>/ʌ/</span>.",
+            options: [
+                { text: "fun", html: "f<u>u</u>n" },
+                { text: "subject", html: "s<u>u</u>bject" },
+                { text: "cup", html: "c<u>u</u>p" },
+                { text: "computer", html: "comp<u>u</u>ter" }
+            ]
+        },
+        {
+            id: "q3",
+            title: "🌟 CÂU 3:",
+            headerWords: "c<u>o</u>me <span class='divider-mark'>|</span> <u>o</u>pen <span class='divider-mark'>|</span> l<u>o</u>ve <span class='divider-mark'>|</span> <u>o</u>ther",
+            correctAnswer: "open",
+            banner: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+            analysis: [
+                { word: "come", pos: "(v)", ipa: "/ʌ/", mean: "đến, đi đến" },
+                { word: "open", pos: "(v/adj)", ipa: "/oʊ/", mean: "mở, mở ra" },
+                { word: "love", pos: "(v/n)", ipa: "/ʌ/", mean: "yêu, tình yêu" },
+                { word: "other", pos: "(adj/pronoun)", ipa: "/ʌ/", mean: "khác" }
+            ],
+            why: "Phần gạch chân ở open phát âm là <span class='ipa-box'>/oʊ/</span>, trong khi các từ còn lại phát âm là <span class='ipa-box'>/ʌ/</span>.",
+            options: [
+                { text: "come", html: "c<u>o</u>me" },
+                { text: "open", html: "<u>o</u>pen" },
+                { text: "love", html: "l<u>o</u>ve" },
+                { text: "other", html: "<u>o</u>ther" }
+            ]
+        },
+        {
+            id: "q4",
+            title: "🌟 CÂU 4:",
+            headerWords: "n<u>ar</u>row <span class='divider-mark'>|</span> l<u>ar</u>ge <span class='divider-mark'>|</span> st<u>ar</u>t <span class='divider-mark'>|</span> M<u>ar</u>s",
+            correctAnswer: "narrow",
+            banner: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+            analysis: [
+                { word: "narrow", pos: "(adj)", ipa: "/ær/", mean: "chật hẹp, eo hẹp" },
+                { word: "large", pos: "(adj)", ipa: "/ɑːrdʒ/", mean: "rộng lớn" },
+                { word: "start", pos: "(v/n)", ipa: "/ɑːrt/", mean: "bắt đầu, khởi hành" },
+                { word: "Mars", pos: "(n)", ipa: "/ɑːrz/", mean: "Sao Hỏa" }
+            ],
+            why: "Phần gạch chân ở narrow phát âm là <span class='ipa-box'>/ær/</span>, trong khi các từ còn lại phát âm là nguyên âm dài <span class='ipa-box'>/ɑː(r)/</span>.",
+            options: [
+                { text: "narrow", html: "n<u>ar</u>row" },
+                { text: "large", html: "l<u>ar</u>ge" },
+                { text: "start", html: "st<u>ar</u>t" },
+                { text: "Mars", html: "M<u>ar</u>s" }
+            ]
+        },
+        {
+            id: "q5",
+            title: "🌟 CÂU 5:",
+            headerWords: "h<u>o</u>pe <span class='divider-mark'>|</span> m<u>o</u>ther <span class='divider-mark'>|</span> d<u>o</u>nkey <span class='divider-mark'>|</span> c<u>o</u>mpass",
+            correctAnswer: "hope",
+            banner: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+            analysis: [
+                { word: "hope", pos: "(v/n)", ipa: "/oʊ/", mean: "hy vọng" },
+                { word: "mother", pos: "(n)", ipa: "/ʌ/", mean: "mẹ" },
+                { word: "donkey", pos: "(n)", ipa: "/ʌ/", mean: "con lừa" },
+                { word: "compass", pos: "(n)", ipa: "/ʌ/", mean: "la bàn, la bàn vẽ" }
+            ],
+            why: "Phần gạch chân ở hope phát âm là nguyên âm đôi <span class='ipa-box'>/oʊ/</span>, trong khi các từ còn lại phát âm là âm ngắn <span class='ipa-box'>/ʌ/</span>.",
+            options: [
+                { text: "hope", html: "h<u>o</u>pe" },
+                { text: "mother", html: "m<u>o</u>ther" },
+                { text: "donkey", html: "d<u>o</u>nkey" },
+                { text: "compass", html: "c<u>o</u>mpass" }
+            ]
+        },
+        {
+            id: "q6",
+            title: "🌟 CÂU 6:",
+            headerWords: "cat<u>s</u> <span class='divider-mark'>|</span> desk<u>s</u> <span class='divider-mark'>|</span> bike<u>s</u> <span class='divider-mark'>|</span> pencil<u>s</u>",
+            correctAnswer: "pencils",
+            banner: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+            analysis: [
+                { word: "cats", pos: "(n)", ipa: "/s/", mean: "những con mèo (kết thúc bằng âm vô thanh /t/)" },
+                { word: "desks", pos: "(n)", ipa: "/s/", mean: "những cái bàn học (kết thúc bằng âm vô thanh /k/)" },
+                { word: "bikes", pos: "(n)", ipa: "/s/", mean: "những chiếc xe đạp (kết thúc bằng âm vô thanh /k/)" },
+                { word: "pencils", pos: "(n)", ipa: "/z/", mean: "những cái bút chì (kết thúc bằng âm hữu thanh /l/)" }
+            ],
+            why: "Phần đuôi s ở pencils phát âm là <span class='ipa-box'>/z/</span> do đứng sau phụ âm hữu thanh /l/. Các từ còn lại phát âm là <span class='ipa-box'>/s/</span> do đứng sau phụ âm vô thanh (/t/, /k/).",
+            options: [
+                { text: "cats", html: "cat<u>s</u>" },
+                { text: "desks", html: "desk<u>s</u>" },
+                { text: "bikes", html: "bike<u>s</u>" },
+                { text: "pencils", html: "pencil<u>s</u>" }
+            ]
+        },
+        {
+            id: "q7",
+            title: "🌟 CÂU 7:",
+            headerWords: "lamp<u>s</u> <span class='divider-mark'>|</span> sofa<u>s</u> <span class='divider-mark'>|</span> wall<u>s</u> <span class='divider-mark'>|</span> bed<u>s</u>",
+            correctAnswer: "lamps",
+            banner: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+            analysis: [
+                { word: "lamps", pos: "(n)", ipa: "/s/", mean: "những chiếc đèn bàn (kết thúc bằng âm vô thanh /p/)" },
+                { word: "sofas", pos: "(n)", ipa: "/z/", mean: "những chiếc ghế sofa (kết thúc bằng nguyên âm hữu thanh)" },
+                { word: "walls", pos: "(n)", ipa: "/z/", mean: "những bức tường (kết thúc bằng âm hữu thanh /l/)" },
+                { word: "beds", pos: "(n)", ipa: "/z/", mean: "những cái giường (kết thúc bằng âm hữu thanh /d/)" }
+            ],
+            why: "Phần đuôi s ở lamps phát âm là <span class='ipa-box'>/s/</span> vì đứng sau phụ âm vô thanh /p/. Các từ còn lại phát âm là <span class='ipa-box'>/z/</span>.",
+            options: [
+                { text: "lamps", html: "lamp<u>s</u>" },
+                { text: "sofas", html: "sofa<u>s</u>" },
+                { text: "walls", html: "wall<u>s</u>" },
+                { text: "beds", html: "bed<u>s</u>" }
+            ]
+        },
+        {
+            id: "q8",
+            title: "🌟 CÂU 8:",
+            headerWords: "map<u>s</u> <span class='divider-mark'>|</span> clock<u>s</u> <span class='divider-mark'>|</span> chair<u>s</u> <span class='divider-mark'>|</span> attic<u>s</u>",
+            correctAnswer: "chairs",
+            banner: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+            analysis: [
+                { word: "maps", pos: "(n)", ipa: "/s/", mean: "những tấm bản đồ (kết thúc bằng âm vô thanh /p/)" },
+                { word: "clocks", pos: "(n)", ipa: "/s/", mean: "những chiếc đồng hồ (kết thúc bằng âm vô thanh /k/)" },
+                { word: "chairs", pos: "(n)", ipa: "/z/", mean: "những cái ghế (kết thúc bằng nguyên âm/phụ âm hữu thanh /r/)" },
+                { word: "attics", pos: "(n)", ipa: "/s/", mean: "những căn gác mái (kết thúc bằng âm vô thanh /k/)" }
+            ],
+            why: "Phần đuôi s ở chairs phát âm là <span class='ipa-box'>/z/</span>. Các từ còn lại đều có âm kết thúc vô thanh nên phát âm là <span class='ipa-box'>/s/</span>.",
+            options: [
+                { text: "maps", html: "map<u>s</u>" },
+                { text: "clocks", html: "clock<u>s</u>" },
+                { text: "chairs", html: "chair<u>s</u>" },
+                { text: "attics", html: "attic<u>s</u>" }
+            ]
+        },
+        {
+            id: "q9",
+            title: "🌟 CÂU 9:",
+            headerWords: "student<u>s</u> <span class='divider-mark'>|</span> apple<u>s</u> <span class='divider-mark'>|</span> cap<u>s</u> <span class='divider-mark'>|</span> flat<u>s</u>",
+            correctAnswer: "apples",
+            banner: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+            analysis: [
+                { word: "students", pos: "(n)", ipa: "/s/", mean: "những học sinh (kết thúc bằng âm vô thanh /t/)" },
+                { word: "apples", pos: "(n)", ipa: "/z/", mean: "những quả táo (kết thúc bằng âm hữu thanh /l/)" },
+                { word: "caps", pos: "(n)", ipa: "/s/", mean: "những chiếc mũ lưỡi trai (kết thúc bằng âm vô thanh /p/)" },
+                { word: "flats", pos: "(n)", ipa: "/s/", mean: "những căn hộ (kết thúc bằng âm vô thanh /t/)" }
+            ],
+            why: "Phần đuôi s ở apples phát âm là <span class='ipa-box'>/z/</span>, trong khi các từ còn lại phát âm là <span class='ipa-box'>/s/</span>.",
+            options: [
+                { text: "students", html: "student<u>s</u>" },
+                { text: "apples", html: "apple<u>s</u>" },
+                { text: "caps", html: "cap<u>s</u>" },
+                { text: "flats", html: "flat<u>s</u>" }
+            ]
+        },
+        {
+            id: "q10",
+            title: "🌟 CÂU 10:",
+            headerWords: "laugh<u>s</u> <span class='divider-mark'>|</span> think<u>s</u> <span class='divider-mark'>|</span> kite<u>s</u> <span class='divider-mark'>|</span> clean<u>s</u>",
+            correctAnswer: "cleans",
+            banner: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+            analysis: [
+                { word: "laughs", pos: "(v)", ipa: "/s/", mean: "cười (tận cùng bằng gh phát âm là âm vô thanh /f/)" },
+                { word: "thinks", pos: "(v)", ipa: "/s/", mean: "suy nghĩ (tận cùng bằng âm vô thanh /k/)" },
+                { word: "kites", pos: "(n)", ipa: "/s/", mean: "những con diều (tận cùng bằng âm vô thanh /t/)" },
+                { word: "cleans", pos: "(v)", ipa: "/z/", mean: "lau dọn (tận cùng bằng âm hữu thanh /n/)" }
+            ],
+            why: "Phần gạch chân s ở cleans phát âm là <span class='ipa-box'>/z/</span>. Các từ còn lại phát âm là <span class='ipa-box'>/s/</span> (lưu ý từ laughs có đuôi gh đọc là /f/ nên s đọc là /s/).",
+            options: [
+                { text: "laughs", html: "laugh<u>s</u>" },
+                { text: "thinks", html: "think<u>s</u>" },
+                { text: "kites", html: "kite<u>s</u>" },
+                { text: "cleans", html: "clean<u>s</u>" }
+            ]
+        },
+        {
+            id: "q11",
+            title: "🌟 CÂU 11:",
+            headerWords: "<u>b</u>ear <span class='divider-mark'>|</span> clim<u>b</u> <span class='divider-mark'>|</span> <u>b</u>aby <span class='divider-mark'>|</span> <u>b</u>lack",
+            correctAnswer: "climb",
+            banner: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+            analysis: [
+                { word: "bear", pos: "(n)", ipa: "/b/", mean: "con gấu" },
+                { word: "climb", pos: "(v)", ipa: "âm câm", mean: "leo, trèo (âm b hoàn toàn không phát âm)" },
+                { word: "baby", pos: "(n)", ipa: "/b/", mean: "em bé" },
+                { word: "black", pos: "(adj)", ipa: "/b/", mean: "màu đen" }
+            ],
+            why: "Ký tự b trong từ climb là phụ âm câm (không phát âm), trong khi ở 3 từ còn lại đều được phát âm rõ ràng thành phụ âm <span class='ipa-box'>/b/</span>.",
+            options: [
+                { text: "bear", html: "<u>b</u>ear" },
+                { text: "climb", html: "clim<u>b</u>" },
+                { text: "baby", html: "<u>b</u>baby" },
+                { text: "black", html: "<u>b</u>lack" }
+            ]
+        },
+        {
+            id: "q12",
+            title: "🌟 CÂU 12:",
+            headerWords: "<u>p</u>erson <span class='divider-mark'>|</span> <u>p</u>sychology <span class='divider-mark'>|</span> ex<u>p</u>eriment <span class='divider-mark'>|</span> <u>p</u>roject",
+            correctAnswer: "psychology",
+            banner: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+            analysis: [
+                { word: "person", pos: "(n)", ipa: "/p/", mean: "con người" },
+                { word: "psychology", pos: "(n)", ipa: "âm câm", mean: "tâm lý học (âm p đứng đầu cụm ps bị câm)" },
+                { word: "experiment", pos: "(n/v)", ipa: "/p/", mean: "thí nghiệm" },
+                { word: "project", pos: "(n)", ipa: "/p/", mean: "dự án, đề án" }
+            ],
+            why: "Ký tự p trong từ psychology là âm câm theo quy tắc ngữ âm tiếng Anh (p đứng trước s ở đầu từ). Các từ còn lại phát âm là <span class='ipa-box'>/p/</span>.",
+            options: [
+                { text: "person", html: "<u>p</u>erson" },
+                { text: "psychology", html: "<u>p</u>sychology" },
+                { text: "experiment", html: "ex<u>p</u>eriment" },
+                { text: "project", html: "<u>p</u>roject" }
+            ]
+        },
+        {
+            id: "q13",
+            title: "🌟 CÂU 13:",
+            headerWords: "de<u>b</u>t <span class='divider-mark'>|</span> <u>b</u>all <span class='divider-mark'>|</span> ro<u>b</u>e <span class='divider-mark'>|</span> ta<u>b</u>le",
+            correctAnswer: "debt",
+            banner: "Chọn từ có phần gạch chân phát âm khác với các từ còn lại.",
+            analysis: [
+                { word: "debt", pos: "(n)", ipa: "âm câm", mean: "khoản nợ (âm b đứng trước t bị câm)" },
+                { word: "ball", pos: "(n)", ipa: "/b/", mean: "quả bóng" },
+                { word: "robe", pos: "(n)", ipa: "/b/", mean: "áo choàng, áo khoác tắm" },
+                { word: "table", pos: "(n)", ipa: "/b/", mean: "cái bàn" }
+            ],
+            why: "Ký tự b trong từ debt là âm câm. Các từ còn lại chữ b vẫn phát âm bình thường là phụ âm <span class='ipa-box'>/b/</span>.",
+            options: [
+                { text: "debt", html: "de<u>b</u>t" },
+                { text: "ball", html: "<u>b</u>all" },
+                { text: "robe", html: "ro<u>b</u>e" },
+                { text: "table", html: "ta<u>b</u>le" }
+            ]
+        }
+    ];
+
+    // Thuật toán Fisher-Yates xáo trộn mảng ngẫu nhiên
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    // Web Audio API khởi tạo âm thanh hệ thống trực tiếp không dùng link ngoài
+    let audioCtx = null;
+    function initAudio() {
+        if (!audioCtx) {
+            audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        }
+    }
+
+    function playSound(type) {
+        try {
+            initAudio();
+            if (!audioCtx) return;
+            
+            const osc = audioCtx.createOscillator();
+            const gain = audioCtx.createGain();
+            osc.connect(gain);
+            gain.connect(audioCtx.destination);
+            const now = audioCtx.currentTime;
+            
+            if (type === 'correct') {
+                osc.type = 'sine';
+                osc.frequency.setValueAtTime(523.25, now); // nốt C5
+                osc.frequency.setValueAtTime(783.99, now + 0.08); // nốt G5
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.35);
+                osc.start(now);
+                osc.stop(now + 0.35);
+            } else {
+                osc.type = 'sawtooth';
+                osc.frequency.setValueAtTime(140, now);
+                osc.frequency.linearRampToValueAtTime(90, now + 0.15);
+                gain.gain.setValueAtTime(0.12, now);
+                gain.gain.exponentialRampToValueAtTime(0.001, now + 0.2);
+                osc.start(now);
+                osc.stop(now + 0.2);
+            }
+        } catch (e) {
+            console.log("Audio API Error:", e);
+        }
+    }
+
+    let userScore = 0;
+    let answeredStatus = {};
+
+    // Tạo giao diện và điền dữ liệu câu hỏi bài tập
+    function buildQuiz() {
+        const container = document.getElementById('quiz-container');
+        container.innerHTML = "";
+
+        quizQuestions.forEach((q) => {
+            answeredStatus[q.id] = false;
+
+            const card = document.createElement('div');
+            card.className = 'question-card bubble-font';
+            card.id = `card-${q.id}`;
+
+            const header = document.createElement('div');
+            header.className = 'question-header';
+            header.innerHTML = `
+                <div class="question-title poster-font">${q.title}</div>
+                <div class="question-words">${q.headerWords}</div>
+            `;
+            card.appendChild(header);
+
+            const grid = document.createElement('div');
+            grid.className = 'options-grid';
+            grid.id = `grid-${q.id}`;
+
+            // Xáo trộn vị trí hiển thị 4 nút đáp án
+            const shuffledOptions = shuffleArray([...q.options]);
+
+            shuffledOptions.forEach(opt => {
+                const btn = document.createElement('button');
+                btn.className = 'option-btn bubble-font';
+                btn.innerHTML = opt.html;
+                btn.onclick = function() {
+                    checkUserChoice(q.id, btn, opt.text, q.correctAnswer);
+                };
+                grid.appendChild(btn);
+            });
+            card.appendChild(grid);
+
+            // Khung giải thích
+            const expBox = document.createElement('div');
+            expBox.className = 'explanation-box';
+            expBox.id = `exp-${q.id}`;
+
+            let analysisHtml = "";
+            q.analysis.forEach(item => {
+                analysisHtml += `<li><span class="eng-word">${item.word}</span> ${item.pos} <span class="ipa-box">${item.ipa}</span>: <span class="vi-mean">${item.mean}</span></li>`;
+            });
+
+            expBox.innerHTML = `
+                <div class="exp-banner">${q.banner}</div>
+                <div class="exp-content">
+                    <strong>1. Phân tích 4 đáp án:</strong>
+                    <ul>${analysisHtml}</ul>
+                    <div class="why-title">2. Tại sao chọn ${q.correctAnswer}?</div>
+                    <p style="margin: 6px 0 0 0;">${q.why}</p>
+                </div>
+            `;
+            card.appendChild(expBox);
+            container.appendChild(card);
+        });
+    }
+
+    // Xử lý sự kiện click đáp án
+    function checkUserChoice(qId, selectedBtn, selectedText, correctText) {
+        if (answeredStatus[qId]) return;
+        answeredStatus[qId] = true;
+
+        const grid = document.getElementById(`grid-${qId}`);
+        const buttons = grid.getElementsByClassName('option-btn');
+
+        // Khóa tất cả các nút cùng nhóm câu hỏi
+        for (let b of buttons) {
+            b.disabled = true;
+        }
+
+        if (selectedText === correctText) {
+            selectedBtn.classList.add('correct');
+            playSound('correct');
+            userScore++;
+        } else {
+            selectedBtn.classList.add('incorrect');
+            playSound('incorrect');
+            // Show đáp án đúng cho học sinh xem đối chiếu
+            for (let b of buttons) {
+                if (b.innerText.trim() === correctText) {
+                    b.classList.add('correct');
+                }
+            }
+        }
+
+        // Hiện tức thì khung giải thích chi tiết
+        document.getElementById(`exp-${qId}`).style.display = 'block';
+    }
+
+    // Popup tổng kết điểm
+    function showSummary() {
+        const total = quizQuestions.length;
+        document.getElementById('popup-score-text').innerText = `${userScore}/${total}`;
+        
+        let msg = "";
+        if (userScore === total) {
+            msg = "Thật tuyệt vời! Em đạt điểm tuyệt đối 100%. Hãy chép lại các cấu trúc từ vựng hay vào sổ tay nhé! 🎉";
+        } else if (userScore >= total / 2) {
+            msg = "Làm tốt lắm! Đừng quên kéo xuống đọc kỹ giải thích các câu làm sai để nhớ sâu hơn kiến thức nhé! 💪";
+        } else {
+            msg = "Em đã hoàn thành bài làm. Hãy xem lại kỹ phần phân tích ngữ âm từng câu để cải thiện điểm số lần sau nha! 🌟";
+        }
+        
+        document.getElementById('popup-comment').innerText = msg;
+        document.getElementById('popup').classList.add('active');
+    }
+
+    function closePopup() {
+        document.getElementById('popup').classList.remove('active');
+    }
+
+    window.onload = buildQuiz;
+</script>
+
+</body>
+</html>
